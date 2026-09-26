@@ -20,24 +20,7 @@ def _list_text(value: object, fallback: str) -> str:
 
 
 def build_test_set(df: pd.DataFrame, output_path) -> list[dict[str, Any]]:
-    """TODO(student): tao bo evaluation set tu cleaned dataframe.
-
-    Pseudo-code:
-    1. Kiem tra so luong document toi thieu.
-    2. Chon mot so paper dai dien.
-    3. Tao nhieu loai cau hoi:
-       - summary
-       - authors
-       - date
-       - categories
-    4. Moi row can co:
-       - id
-       - question_type
-       - question
-       - ground_truth
-       - ground_truth_doc_ids
-    5. Ghi file JSON vao output_path.
-    """
+    """Build and persist a 10-question benchmark across four paper fields."""
     required_columns = {"paper_id", "title", "summary", "published"}
     missing_columns = required_columns - set(df.columns)
     if missing_columns:

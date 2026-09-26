@@ -1,58 +1,38 @@
-# Danh Sách Thành Viên & Báo Cáo Phân Công Nhóm
+# Team — Day 10: Data Pipeline & Data Observability
 
-- **Tên Nhóm:** `[Điền tên nhóm]`
-- **Mã Nhóm / Lớp:** `K4-L3-DAY10`
-- **Tên Repository Nộp Bài:** `K4-L3-DAY10-TenNhom-DataPipeline`
+- **Team name:** FourGuys (from the submission repository name)
+- **Class:** K4-L3B
+- **Repository:** [K4-L3B-DAY10-FourGuys-DataPipelineDataObservability](https://github.com/dotrongbinhf/K4-L3B-DAY10-FourGuys-DataPipelineDataObservability)
 
----
+## Members and ownership
 
-## # Thành viên
+| # | Full name | Student ID | Main role | Evidence / individual report |
+|---:|---|---|---|---|
+| 1 | Đào Gia Bảo | 2A202602793 | Corruption suite, pipeline integration, corruption unit test | Commit `963d746`; [individual report](../report/2A202602793_DaoGiaBao.md) |
+| 2 | Nguyễn Văn Thăng | 2A202602835 | Crossref ingestion, raw data lineage, cleaning | Commits `d6e9520`, `14d845a`; [individual report](../report/2A202602835_NguyenVanThang.md) |
+| 3 | Đoàn Quang Thanh | 2A202602841 | Quality/evaluation verification, retrieval correctness and portable vector index | Commits `119872d`, `a7c0413`; [individual report](../report/2A202602841_DoanQuangThanh.md) |
+| 4 | Đỗ Trọng Bình | 2A202602855 | Corruption repair orchestration, comparison reporting and result artifacts | Commit `d3d63c6`; [individual report](../report/2A202602855_DoTrongBinh.md) |
 
-| STT | Họ và tên | MSSV | Email | Vai trò & Phân công công việc | Báo cáo cá nhân |
-|---:|---|---|---|---|---|
-| 1 | | | | Trưởng nhóm / Pipeline Integrator (`core/`, `phase1.py`, `corruption_flow.py`) | `report/<MSSV1>_HoTen.md` |
-| 2 | | | | Data Foundation & Recovery (`crossref.py`, `cleaning.py`, raw data) | `report/<MSSV2>_HoTen.md` |
-| 3 | | | | RAG & Vector Index (`retrieval/index.py`, `embeddings.py`, ChromaDB) | `report/<MSSV3>_HoTen.md` |
-| 4 | | | | Observability & Evaluation (`quality.py` GX 1.x, `testset.py`, reporting) | `report/<MSSV4>_HoTen.md` |
+Role assignments combine repository history with the members' stated responsibilities. Each member should review and personalize their report before submission.
 
-*(Nếu nhóm có 3 hoặc 5-6 thành viên, xem bảng phân công chi tiết theo vai trò trong file `CHECKPOINTS.md`)*.
+## Checkpoint ownership
 
----
+| Checkpoint | Main deliverable | Owner(s) |
+|---|---|---|
+| CP0 | Crossref response/records and environment | Nguyễn Văn Thăng |
+| CP1 | Cleaning, GX 1.x quality gate and freshness SLA | Nguyễn Văn Thăng; Đoàn Quang Thanh verified the gate |
+| CP2 | Benchmark set and Chroma baseline index | Đoàn Quang Thanh |
+| CP3 | Baseline pipeline, scoring and report | Đào Gia Bảo; Đoàn Quang Thanh corrected retrieval evaluation |
+| CP4 | Six deterministic data corruption scenarios | Đào Gia Bảo |
+| CP5 | Repair from raw data and three-state comparison | Đỗ Trọng Bình, with Đào Gia Bảo's corruption module |
+| CP6 | Live demo, Q&A and LMS submission | **Not confirmed yet** |
 
-## # Cá nhân
+## Repository and submission checklist
 
-### ## HoVaTen1-MSSV1
-- **Vai trò:** Trưởng nhóm & Điều phối Pipeline.
-- **Công việc chi tiết đã hoàn thành:**
-  - Thiết lập cấu hình hệ thống `core/config.py` và đường dẫn artifacts `core/utils.py`.
-  - Kết nối luồng thực thi trong `src/pipelines/phase1.py` và `src/pipelines/corruption_flow.py`.
-  - Kiểm tra tính nhất quán của các artifacts và theo dõi Contributor tracking trên GitHub nhánh `main`.
-- **Điều học được / Đóng góp chính:**
-  - Hiểu sâu sắc về thiết kế Idempotent Pipeline và quản lý trạng thái luồng dữ liệu đa tầng.
-
-### ## HoVaTen2-MSSV2
-- **Vai trò:** Phụ trách Ingestion, Làm sạch & Phục hồi dữ liệu.
-- **Công việc chi tiết đã hoàn thành:**
-  - Xây dựng module thu thập Crossref API với cơ chế Fallback offline trong `src/ingestion/crossref.py`.
-  - Chuẩn hóa schema, tính toán trường `age_days` và `text_for_embedding` trong `src/ingestion/cleaning.py`.
-  - Thực thi cơ chế Idempotent Repair phục hồi dữ liệu từ raw snapshot.
-- **Điều học được / Đóng góp chính:**
-  - Kỹ thuật truy vết nguồn gốc dữ liệu (Data Lineage) và bảo toàn raw snapshot trước khi biến đổi.
-
-### ## HoVaTen3-MSSV3
-- **Vai trò:** Phụ trách RAG, Vector Database & Embedding.
-- **Công việc chi tiết đã hoàn thành:**
-  - Quản lý mô hình embedding `sentence-transformers/all-MiniLM-L6-v2`.
-  - Nạp và quản lý 3 collection riêng biệt trong ChromaDB (`papers-baseline`, `papers-corrupted`, `papers-repaired`).
-  - Xây dựng QA Agent truy vấn ngữ cảnh chính xác theo tài liệu.
-- **Điều học được / Đóng góp chính:**
-  - Cách cô lập các không gian vector để so sánh khách quan giữa dữ liệu sạch và dữ liệu bị lỗi.
-
-### ## HoVaTen4-MSSV4
-- **Vai trò:** Phụ trách Data Observability & Benchmark Evaluation.
-- **Công việc chi tiết đã hoàn thành:**
-  - Thiết lập Quality Gate theo chuẩn mới **Great Expectations 1.x** và giám sát Freshness SLA trong `src/observability/quality.py`.
-  - Xây dựng bộ câu hỏi đánh giá chuẩn trong `src/evaluation/testset.py`.
-  - Đo lường và xuất bảng đối chiếu 3 trạng thái vào `data/reports/corruption_report.md`.
-- **Điều học được / Đóng góp chính:**
-  - Cách thiết lập hệ thống cảnh báo sớm chặn đứng hiện tượng Silent Failure trước khi dữ liệu vào serving layer.
+- [x] Required team and submission instruction files are present.
+- [x] All four named members have commits in the repository history on `main`.
+- [x] Baseline and corruption pipelines were run locally on 2026-09-26.
+- [ ] Confirm that all four members appear in GitHub Insights → Contributors after the final commits are pushed.
+- [ ] Confirm that each member submits the repository link on VLearn LMS.
+- [ ] Record the live demo/Q&A completion after it happens.
+- [ ] Each member reviews and approves the content of their individual report.
