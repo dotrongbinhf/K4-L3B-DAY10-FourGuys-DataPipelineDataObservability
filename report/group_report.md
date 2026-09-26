@@ -20,7 +20,7 @@
 
 ## 2. Tóm tắt kết quả
 
-Nhóm FourGuys xây dựng pipeline từ Crossref snapshot qua raw records, cleaning, Great Expectations 1.x, freshness monitoring, MiniLM embeddings và ChromaDB. Baseline được đánh giá bằng 10 câu hỏi trên cùng test set dùng cho corrupted và repaired. Baseline đạt retrieval hit rate 1.000, mean token F1 0.900, judge accuracy 0.900 và mean judge score 4.600. Bộ corruption tạo sáu loại lỗi; quality gate chuyển sang FAIL và retrieval hit rate giảm còn 0.500, token F1 còn 0.621. Repair dựng lại 24 dòng từ raw snapshot, vượt quality gate và khôi phục các metric về baseline. Freshness vẫn PASS khi corrupted vì chỉ 1/20 dòng (5%) vượt 180 ngày, dưới ngưỡng SLA 25%. Benchmark dùng heuristic judge; Ragas chưa chạy do thiếu Gemini API key trong môi trường kiểm chứng.
+Nhóm FourGuys xây dựng pipeline từ Crossref snapshot qua raw records, cleaning, Great Expectations 1.x, freshness monitoring, MiniLM embeddings và ChromaDB. Baseline được đánh giá bằng 10 câu hỏi trên cùng test set dùng cho corrupted và repaired. Baseline đạt retrieval hit rate 1.000, mean token F1 0.900, judge accuracy 0.900 và mean judge score 4.600. Bộ corruption tạo sáu loại lỗi; quality gate chuyển sang FAIL và retrieval hit rate giảm còn 0.500, token F1 còn 0.621. Repair dựng lại 24 dòng từ raw snapshot, vượt quality gate và khôi phục các metric về baseline. Freshness vẫn PASS khi corrupted vì chỉ 1/20 dòng (5%) vượt 180 ngày, dưới ngưỡng SLA 25%. Benchmark dùng heuristic judge; Ragas chưa có kết quả vì lời gọi Gemini thất bại do DNS không phân giải được `generativelanguage.googleapis.com`.
 
 ## 3. Kiến trúc và luồng dữ liệu
 
@@ -97,7 +97,7 @@ Giữ nguyên test set để thay đổi metric phản ánh trạng thái dữ l
 | `mean_token_f1` | 0.900 | Token F1 trung bình với ground truth |
 | `judge_accuracy` | 0.900 | Tỷ lệ đúng theo heuristic judge |
 | `mean_judge_score` | 4.600 / 5 | Điểm heuristic trung bình |
-| Ragas | Skipped | `RUN_RAGAS=1` yêu cầu LLM API key; Gemini key không được cấu hình trong môi trường kiểm chứng |
+| Ragas | Chưa hoàn tất | Key đã cấu hình; provider hostname `generativelanguage.googleapis.com` không phân giải được từ môi trường chạy |
 
 ## 8. Data quality và freshness
 
@@ -146,7 +146,7 @@ Manifest Chroma ban đầu chứa đường dẫn tuyệt đối từ máy Windo
 
 | Giới hạn | Ảnh hưởng | Cải thiện |
 |---|---|---|
-| Heuristic judge, Ragas chưa bật | Không thay thế được đánh giá bởi LLM/faithfulness metrics | Bật judge/Ragas với API key quản lý ngoài repo và ghi rõ chi phí/cấu hình |
+| Heuristic judge; Ragas chưa có kết quả | Không thay thế được đánh giá bởi LLM/faithfulness metrics | Chạy lại `RUN_RAGAS=1` trong môi trường có thể truy cập Gemini API |
 | Demo hiện không có dashboard | Không có biểu đồ live | Trình chiếu console/report hoặc làm dashboard nếu nhóm còn thời gian |
 | Raw snapshot không lưu thời điểm fetch/query metadata riêng | Khó audit chính xác thời điểm nguồn được lấy | Ghi ingestion manifest có timestamp, params và source hash |
 
