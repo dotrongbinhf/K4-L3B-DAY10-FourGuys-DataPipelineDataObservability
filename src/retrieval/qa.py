@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-import re
 
 from core.config import Settings
 from core.utils import first_sentence
@@ -20,29 +19,20 @@ class AnswerResult:
 def _extract_answer(question: str, top_result: SearchResult) -> str:
     lowered = question.lower()
     metadata = top_result.metadata
-    if "who authored" in lowered or "list the authors" in lowered:
+    if "author" in lowered:
         return metadata["authors_joined"]
-    if "when was" in lowered or "publication date" in lowered or "published on" in lowered:
+    if any(term in lowered for term in ("when was", "publication date", "published on", "published")):
         return metadata["published"]
-    if "what categories" in lowered:
+    if "categor" in lowered:
         return metadata["categories_joined"]
     return first_sentence(metadata["summary"])
 
 
 def answer_question(question: str, settings: Settings, index: LocalEmbeddingIndex, top_k: int | None = None) -> AnswerResult:
-    title_match = re.search(r"'([^']+)'", question)
-    exact = index.lookup(title_match.group(1)) if title_match else None
+    # Evaluation must use vector retrieval only. Looking up a quoted title would
+    # reveal the ground-truth document embedded in generated benchmark questions
+    # and make retrieval_hit_rate artificially perfect.
     retrieved = index.search(question, top_k=top_k)
-    if exact:
-        exact_result = SearchResult(
-            paper_id=exact["paper_id"],
-            title=exact["title"],
-            score=1.0,
-            content=exact["content"],
-            metadata=exact["metadata"],
-        )
-        deduped = [exact_result] + [item for item in retrieved if item.paper_id != exact_result.paper_id]
-        retrieved = deduped[: (top_k or settings.top_k)]
     if not retrieved:
         answer = "I don't know from the indexed corpus."
     else:

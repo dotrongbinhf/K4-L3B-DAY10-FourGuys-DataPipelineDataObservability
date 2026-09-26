@@ -116,7 +116,9 @@ class LocalEmbeddingIndex:
             {
                 "backend": "chroma",
                 "embedding_model": settings.embedding_model,
-                "persist_path": str(persist_path),
+                # Store the path relative to the project root so the manifest is
+                # portable between developer machines and operating systems.
+                "persist_path": persist_path.relative_to(settings.paths.project_dir).as_posix(),
                 "collection_name": collection_name,
                 "documents": documents,
             },
@@ -135,7 +137,9 @@ class LocalEmbeddingIndex:
             settings=settings,
             collection_name=payload["collection_name"],
             documents=payload["documents"],
-            persist_path=Path(payload["persist_path"]),
+            # The configured project path is canonical. Older manifests may
+            # contain machine-specific absolute paths, so do not trust them.
+            persist_path=settings.paths.chroma_dir,
         )
 
     def search(self, query: str, top_k: int | None = None) -> list[SearchResult]:
