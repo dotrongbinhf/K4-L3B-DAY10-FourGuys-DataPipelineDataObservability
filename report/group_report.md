@@ -26,8 +26,6 @@ Nhóm hoàn thiện ingestion Crossref, cleaning, kiểm định Great Expectati
 
 ### Luồng end-to-end
 
-Điều chỉnh sơ đồ dưới đây nếu cách triển khai thực tế của nhóm khác starter:
-
 ```text
 Crossref API hoặc local snapshot
     -> raw response và parsed records
@@ -69,8 +67,6 @@ Crossref API hoặc local snapshot
 Không lưu API key trong repository. Các metrics judge của lần xác minh offline dùng heuristic fallback.
 
 ### Lệnh cài đặt
-
-Chỉ giữ lại cách nhóm đã dùng.
 
 ```bash
 uv sync
@@ -118,8 +114,8 @@ LLM_PROVIDER=mock LLM_MODEL=mock .venv/bin/python script/run_corruption_flow.py
 | Raw `DOI` / clean `paper_id` | String | Có | Định danh bài báo | Bỏ record thiếu; lowercase và deduplicate |
 | Raw `title` / clean `title` | String hoặc list / string | Có | Tiêu đề | Lấy/chuẩn hóa title; bỏ nếu rỗng |
 | Raw `abstract` / clean `summary` | String / string | Có | Tóm tắt | Bỏ JATS/HTML tags; bỏ record thiếu |
-| Raw `author` / clean `authors` | List[object] / list[string] | Không | Danh sách tác giả | Ghép given/family; dùng `Unknown` nếu trống |
-| Raw `subject` / clean `categories` | List[string] / list[string] | Không | Lĩnh vực | Chuẩn hóa; dùng `Uncategorized` nếu trống |
+| Raw `author` / clean `authors` | List[object] / list[string] | Không | Danh sách tác giả | Chuẩn hóa thành list; nếu rỗng, `authors_joined="Unknown"` |
+| Raw `subject` / clean `categories` | List[string] / list[string] | Không | Lĩnh vực | Chuẩn hóa thành list; nếu rỗng, `categories_joined="Uncategorized"` |
 | Raw publication date / clean `published` | Date-parts object / ISO date | Có | Ngày xuất bản | Thử các trường Crossref theo thứ tự; loại ngày không hợp lệ |
 | Clean `age_days` | Integer | Có | Số ngày từ xuất bản tới ngày chạy | Tính từ `published`; dùng cho freshness |
 | Clean `text_for_embedding` | String | Có | Nội dung đưa vào embedding | Ghép Title, Authors, Published, Categories, Summary |
@@ -225,14 +221,10 @@ Repair nạp lại `data/raw/crossref_records.json`, chạy cleaning, quality/fr
 | Quality checks pass/fail | PASS | FAIL | PASS | PASS→FAIL | FAIL→PASS | Corrupted: duplicate và summary length |
 | Freshness status | PASS (0%) | PASS (5%) | PASS (0%) | Stale +5 pp | Stale -5 pp | Cả ba không vượt 25% SLA |
 
-Nêu ít nhất hai kết luận có quan hệ nhân quả được hỗ trợ bởi artifacts:
-
 1. Corruption kết hợp bỏ record mới nhất, blank summary và duplicate làm uniqueness/summary-length checks FAIL; trên cùng test set hit rate giảm 1.000→0.500 và Token F1 giảm 0.900→0.621. Các mutation chạy cùng lượt nên không tách riêng mức tác động từng loại.
 2. Repair dựng lại từ raw records tạo 24 clean rows, quality trở lại PASS và evaluation cùng test set đưa hit rate/Token F1 về 1.000/0.900.
 
 ## 11. Vấn đề tích hợp quan trọng
-
-Mô tả một vấn đề phát sinh khi ghép các module trong pipeline và cách nhóm xử lý:
 
 - **Triệu chứng:** Baseline benchmark từng có thể trả Hit Rate 1.0 dù retrieval vector không đưa ground-truth DOI lên đầu.
 - **Nguyên nhân:** Câu hỏi benchmark chứa title trong dấu nháy và QA dùng exact-title lookup để đẩy paper đó lên kết quả.

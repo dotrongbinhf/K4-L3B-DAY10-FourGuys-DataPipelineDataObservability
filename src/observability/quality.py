@@ -44,7 +44,8 @@ def run_data_quality_checks(df: pd.DataFrame, settings: Settings, stage: str) ->
         ),
     ]
     validation_results = [batch.validate(expectation) for expectation in expectations]
-    freshness = evaluate_freshness_sla(df, settings, settings.paths.freshness_report)
+    freshness_report_path = settings.paths.freshness_report if stage == "baseline" else None
+    freshness = evaluate_freshness_sla(df, settings, freshness_report_path)
     results = [result.to_json_dict() for result in validation_results]
     report = {
         "stage": stage,
@@ -60,7 +61,7 @@ def run_data_quality_checks(df: pd.DataFrame, settings: Settings, stage: str) ->
 def evaluate_freshness_sla(
     df: pd.DataFrame, settings: Settings, report_path: Path | None = None
 ) -> dict[str, Any]:
-    """Evaluate the 25% stale-row SLA and write its lineage report."""
+    """Evaluate the 25% stale-row SLA and optionally write its lineage report."""
     published = pd.to_datetime(df.get("published"), errors="coerce")
     if "age_days" in df:
         age_days = pd.to_numeric(df["age_days"], errors="coerce")
@@ -82,7 +83,8 @@ def evaluate_freshness_sla(
         "max_stale_ratio": 0.25,
         "is_fresh": stale_ratio <= 0.25,
     }
-    write_json(Path(report_path or settings.paths.freshness_report), report)
+    if report_path is not None:
+        write_json(Path(report_path), report)
     return report
 
 
