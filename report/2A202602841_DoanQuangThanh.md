@@ -23,4 +23,4 @@ Exact-title lookup tiện cho truy vấn trực tiếp, nhưng không phù hợp
 
 GX gate dùng row count, non-null columns, uniqueness và summary length. Freshness tách riêng, tính tỷ lệ `age_days > 180` và chỉ FAIL nếu vượt 25%. Vì corrupted có stale ratio 5%, freshness PASS dù quality gate FAIL.
 
-**Giới hạn:** Judge hiện là heuristic; Ragas bị skip theo mặc định. Kết quả không phải đánh giá bởi LLM judge. Baseline Hit Rate đạt 1.0 nhờ benchmark questions truy xuất được đúng document qua vector search.
+**Giới hạn:** Judge hiện là heuristic; Ragas chưa chạy do môi trường kiểm chứng không có Gemini API key. Kết quả không phải đánh giá bởi LLM judge. Baseline Hit Rate đạt 1.0 nhờ benchmark questions truy xuất được đúng document qua vector search.
