@@ -41,6 +41,17 @@ def _normalize_list(values: object) -> list[str]:
     return [cleaned for value in values if (cleaned := _normalize_text(value))]
 
 
+def build_text_for_embedding(row: object) -> str:
+    """Build the canonical embedding text from a clean-data row."""
+    return (
+        f"Title: {row['title']}\n"
+        f"Authors: {row['authors_joined']}\n"
+        f"Published: {row['published']}\n"
+        f"Categories: {row['categories_joined']}\n"
+        f"Summary: {row['summary']}"
+    )
+
+
 def build_clean_dataframe(records: list[PaperRecord], run_date: datetime) -> pd.DataFrame:
     """Return a deduplicated, embedding-ready Crossref dataframe."""
     if not records:
@@ -75,16 +86,7 @@ def build_clean_dataframe(records: list[PaperRecord], run_date: datetime) -> pd.
     df["authors_joined"] = df["authors"].map(lambda values: ", ".join(values) or "Unknown")
     df["categories_joined"] = df["categories"].map(lambda values: ", ".join(values) or "Uncategorized")
     df["summary_chars"] = df["summary"].str.len().astype("int64")
-    df["text_for_embedding"] = df.apply(
-        lambda row: (
-            f"Title: {row['title']}\n"
-            f"Authors: {row['authors_joined']}\n"
-            f"Published: {row['published']}\n"
-            f"Categories: {row['categories_joined']}\n"
-            f"Summary: {row['summary']}"
-        ),
-        axis=1,
-    )
+    df["text_for_embedding"] = df.apply(build_text_for_embedding, axis=1)
     clean_df = df.sort_values(["published", "paper_id"], ascending=[False, True]).reset_index(drop=True)[
         _CLEAN_COLUMNS
     ]

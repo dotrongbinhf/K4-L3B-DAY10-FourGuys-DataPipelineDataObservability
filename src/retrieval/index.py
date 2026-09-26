@@ -94,16 +94,18 @@ class LocalEmbeddingIndex:
 
         embedding_model = MiniLMEmbeddings(settings.embedding_model)
         client = chromadb.PersistentClient(path=str(persist_path))
-        try:
-            client.delete_collection(name=collection_name)
-        except Exception:
-            pass
-        collection = client.create_collection(
+        collection = client.get_or_create_collection(
             name=collection_name,
             configuration={"hnsw": {"space": "cosine"}},
         )
         embeddings = embedding_model.embed_documents([document["content"] for document in documents])
-        collection.add(
+        # Rebuild in place: deleting/recreating a persistent Chroma collection
+        # leaves retired segment directories on disk after each pipeline run.
+        # Clear the deterministic IDs, then upsert the current clean snapshot.
+        existing_ids = collection.get(include=[]).get("ids", [])
+        if existing_ids:
+            collection.delete(ids=existing_ids)
+        collection.upsert(
             ids=[document["record_id"] for document in documents],
             embeddings=embeddings,
             documents=[document["content"] for document in documents],

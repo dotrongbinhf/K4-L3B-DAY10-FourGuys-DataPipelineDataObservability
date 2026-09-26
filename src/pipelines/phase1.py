@@ -4,6 +4,7 @@ from datetime import UTC, datetime
 from typing import Any
 
 from core.config import Settings, load_settings
+from core.utils import write_csv, write_json
 from evaluation.metrics import evaluate_pipeline
 from evaluation.testset import build_test_set
 from ingestion.cleaning import build_clean_dataframe
@@ -19,6 +20,11 @@ def run_phase1_pipeline(settings: Settings) -> dict[str, Any]:
     records = load_raw_records(settings.paths.raw_records_json) if use_snapshot else fetch_source_records(settings)
     clean_df = build_clean_dataframe(records, datetime.now(UTC))
 
+    # Persist both configured clean artifacts before quality validation so the
+    # normalized Step 3 output is available even when the gate fails.
+    write_csv(clean_df, settings.paths.clean_csv)
+    write_json(settings.paths.clean_json, clean_df.to_dict(orient="records"))
+
     quality = run_data_quality_checks(clean_df, settings, stage="baseline")
     if not quality["success"]:
         raise RuntimeError("Baseline data failed the Great Expectations quality gate.")
@@ -32,11 +38,14 @@ def run_phase1_pipeline(settings: Settings) -> dict[str, Any]:
         metrics_output_path=settings.paths.baseline_metrics,
         answers_output_path=settings.paths.baseline_answers,
     )
+    answers = evaluation.answers
     source_summary = {
         "records_ingested": len(records),
         "clean_records": len(clean_df),
         "source_mode": "local raw snapshot" if use_snapshot else "Crossref API/fallback snapshot",
         "test_questions": len(test_set),
+        "collection_name": index.collection_name,
+        "indexed_documents": index.collection.count(),
     }
     generate_phase1_report(
         settings.paths.baseline_report,
@@ -44,6 +53,7 @@ def run_phase1_pipeline(settings: Settings) -> dict[str, Any]:
         metrics=evaluation.summary,
         quality=quality,
         freshness=quality["freshness"],
+        per_query=answers,
     )
     return {
         "source": source_summary,
