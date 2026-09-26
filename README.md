@@ -14,27 +14,19 @@
 | 2️⃣ | [CHECKPOINTS.md](docs/CHECKPOINTS.md) | Phân bổ thời gian 240 phút & deliverables từng mốc |
 | 3️⃣ | [RUBRIC.md](docs/RUBRIC.md) | Tiêu chí chấm điểm (100 chuẩn + 10 bonus) |
 | 4️⃣ | [SUBMISSION.md](docs/SUBMISSION.md) | Nội quy, deadline, bảo mật & checklist nộp bài |
-| 5️⃣ | [TEAM.md](docs/TEAM.md) | Thành viên, phân công và checklist |
+| 5️⃣ | [TEAM.md](docs/TEAM.md) | Điền thông tin nhóm & báo cáo cá nhân |
 
 ---
 
-## Repo có gì?
+## Repo có sẵn gì? (Scaffolded Baseline)
 
-- `data/raw/` — Crossref response và parsed records để tái chạy offline
-- `src/` — Ingestion, cleaning, Great Expectations 1.x quality gate, retrieval, evaluation và repair flow
-- `data/` — Clean/corrupted/repaired datasets, ChromaDB, metrics, quality reports và comparison report
+- `data/raw/` — Snapshot offline Crossref API (`crossref_response.json`)
+- `src/` — Khung pipeline thu thập, embedding MiniLM, đánh giá metrics (có `TODO(student)`)
 - `script/` — Entrypoints: `run_phase1.py`, `run_corruption_flow.py`
-- `docs/DEMO_GUIDE.md` — Kịch bản demo và câu hỏi phản biện gợi ý
-- `report/` — Báo cáo nhóm và báo cáo cá nhân
 
-## Chạy pipeline
+## Học viên cần làm gì?
 
-```bash
-uv sync
-uv run python script/run_phase1.py
-uv run python script/run_corruption_flow.py
-```
-
-## Demo và nộp bài
-
-Xem [kịch bản demo](docs/DEMO_GUIDE.md) và [hướng dẫn nộp bài](docs/SUBMISSION.md).
+1. Hoàn thiện **Data Quality Gate** (Great Expectations 1.x) trong `src/observability/quality.py`
+2. Tích hợp **Freshness Check** (`age_days`) vào Quality Gate
+3. Chạy **Baseline → Corruption → Repair** → xuất bảng đối chiếu 3 trạng thái
+4. **Live Demo** trên bảng & nộp link repo lên VLearn LMS
