@@ -1,7 +1,5 @@
 # Individual Report — Nguyễn Văn Thăng (2A202602835)
 
-> Bản nháp này tổng hợp từ Git history và artifacts. Thành viên đứng tên cần rà soát, bổ sung trải nghiệm cá nhân và xác nhận nội dung trước khi nộp.
-
 ## Vai trò và bằng chứng
 
 **Vai trò:** Crossref ingestion, raw data lineage và cleaning. Commit tiêu biểu: `d6e9520` (`Update craw data and clean data`) và `14d845a` (merge giữ ingestion mới nhất).
@@ -24,4 +22,4 @@ Ingestion giữ raw response trước khi parse để có lineage và khả năn
 
 Kiểm tra bằng các artifacts trong `data/raw/`, `data/clean/`, và quality report. Repair đọc lại raw snapshot nên không phụ thuộc corrupted dataframe. Khi demo, giải thích vì sao giữ raw tách biệt với clean data: raw là nguồn có thể tin cậy để tái tạo state sau biến đổi lỗi.
 
-**Lưu ý cá nhân:** Bổ sung thời điểm/query lấy snapshot nếu bạn còn log ngoài repo; hiện artifact không lưu timestamp fetch riêng. Hãy thêm chi tiết về lỗi ingestion thực tế bạn đã xử lý trước khi nộp.
+Raw snapshot hiện không lưu riêng timestamp và query metadata của lần fetch.

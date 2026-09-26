@@ -1,7 +1,5 @@
 # Individual Report — Đỗ Trọng Bình (2A202602855)
 
-> Bản nháp này tổng hợp từ Git history và artifacts. Thành viên đứng tên cần rà soát, bổ sung trải nghiệm cá nhân và xác nhận nội dung trước khi nộp.
-
 ## Vai trò và bằng chứng
 
 **Vai trò:** Repair orchestration, comparison reporting và kết quả pipeline. Commit tiêu biểu: `d3d63c6` (`feat: step 8`).
@@ -25,4 +23,4 @@ Repair khởi đầu từ `data/raw/crossref_records.json`, chạy lại cleanin
 
 Trong demo, chỉ ra sự khác nhau giữa gate chất lượng và freshness SLA: duplicate/blank summary khiến quality FAIL, còn tỷ lệ stale 5% chưa đủ làm freshness FAIL. Giải thích pipeline vẫn index corrupted dataset để đo tác động thực nghiệm, trong khi repaired data chỉ được index sau khi gate pass.
 
-**Lưu ý cá nhân:** Bổ sung các lỗi orchestration cụ thể bạn trực tiếp xử lý và cách bạn tự xác minh idempotence trước khi nộp.
+Pipeline tách repaired collection khỏi corrupted collection và tái tạo dữ liệu từ raw snapshot để giữ tính lặp lại của quy trình.

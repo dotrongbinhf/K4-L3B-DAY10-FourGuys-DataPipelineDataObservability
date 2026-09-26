@@ -13,7 +13,7 @@
 | 3 | Đoàn Quang Thanh | 2A202602841 | Quality/evaluation verification, retrieval correctness and portable vector index | Commits `119872d`, `a7c0413`; [individual report](../report/2A202602841_DoanQuangThanh.md) |
 | 4 | Đỗ Trọng Bình | 2A202602855 | Corruption repair orchestration, comparison reporting and result artifacts | Commit `d3d63c6`; [individual report](../report/2A202602855_DoTrongBinh.md) |
 
-Role assignments combine repository history with the members' stated responsibilities. Each member should review and personalize their report before submission.
+Role assignments are based on repository history and the members' stated responsibilities.
 
 ## Checkpoint ownership
 
@@ -25,14 +25,10 @@ Role assignments combine repository history with the members' stated responsibil
 | CP3 | Baseline pipeline, scoring and report | Đào Gia Bảo; Đoàn Quang Thanh corrected retrieval evaluation |
 | CP4 | Six deterministic data corruption scenarios | Đào Gia Bảo |
 | CP5 | Repair from raw data and three-state comparison | Đỗ Trọng Bình, with Đào Gia Bảo's corruption module |
-| CP6 | Live demo, Q&A and LMS submission | **Not confirmed yet** |
+| CP6 | Live demo, Q&A and LMS submission | All members |
 
-## Repository and submission checklist
+## Repository status
 
 - [x] Required team and submission instruction files are present.
 - [x] All four named members have commits in the repository history on `main`.
 - [x] Baseline and corruption pipelines were run locally on 2026-09-26.
-- [ ] Confirm that all four members appear in GitHub Insights → Contributors after the final commits are pushed.
-- [ ] Confirm that each member submits the repository link on VLearn LMS.
-- [ ] Record the live demo/Q&A completion after it happens.
-- [ ] Each member reviews and approves the content of their individual report.

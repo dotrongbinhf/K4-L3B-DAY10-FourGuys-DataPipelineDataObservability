@@ -25,7 +25,7 @@
 - `data/` — Clean/corrupted/repaired datasets, ChromaDB, metrics, quality reports và comparison report
 - `script/` — Entrypoints: `run_phase1.py`, `run_corruption_flow.py`
 - `docs/DEMO_GUIDE.md` — Kịch bản demo và câu hỏi phản biện gợi ý
-- `report/` — Báo cáo nhóm và bản nháp báo cáo cá nhân cần từng thành viên tự rà soát
+- `report/` — Báo cáo nhóm và báo cáo cá nhân
 
 ## Chạy pipeline
 
@@ -35,6 +35,6 @@ uv run python script/run_phase1.py
 uv run python script/run_corruption_flow.py
 ```
 
-## Việc nghiệm thu còn lại
+## Demo và nộp bài
 
-Rà soát và cá nhân hóa các báo cáo thành viên, xác nhận mọi người xuất hiện trong GitHub Insights → Contributors sau lần push cuối, trình diễn/Q&A trực tiếp và mỗi cá nhân tự nộp repository link lên VLearn LMS. Xem [kịch bản demo](docs/DEMO_GUIDE.md) và [checklist submission](docs/SUBMISSION.md).
+Xem [kịch bản demo](docs/DEMO_GUIDE.md) và [hướng dẫn nộp bài](docs/SUBMISSION.md).

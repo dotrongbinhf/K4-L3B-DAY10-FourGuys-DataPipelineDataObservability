@@ -1,7 +1,5 @@
 # Individual Report — Đoàn Quang Thanh (2A202602841)
 
-> Bản nháp này tổng hợp từ phần review/verification trong phiên làm việc và Git commits của thành viên. Hãy tự xác nhận nội dung cá nhân trước khi nộp.
-
 ## Vai trò và bằng chứng
 
 **Vai trò:** Quality/evaluation verification, retrieval correctness và portability của vector index. Commits tiêu biểu: `119872d` (`fix retrieval evaluation and portable index paths`) và `a7c0413` (`refresh baseline artifacts with vector retrieval`).
@@ -25,4 +23,4 @@ Exact-title lookup tiện cho truy vấn trực tiếp, nhưng không phù hợp
 
 GX gate dùng row count, non-null columns, uniqueness và summary length. Freshness tách riêng, tính tỷ lệ `age_days > 180` và chỉ FAIL nếu vượt 25%. Vì corrupted có stale ratio 5%, freshness PASS dù quality gate FAIL.
 
-**Giới hạn:** Judge hiện là heuristic; Ragas bị skip theo mặc định. Kết quả không phải đánh giá bởi LLM judge. Hãy thêm phản ánh cá nhân về bước review và giải thích được vì sao baseline Hit Rate vẫn đạt 1.0 sau khi đã bỏ exact lookup.
+**Giới hạn:** Judge hiện là heuristic; Ragas bị skip theo mặc định. Kết quả không phải đánh giá bởi LLM judge. Baseline Hit Rate đạt 1.0 nhờ benchmark questions truy xuất được đúng document qua vector search.

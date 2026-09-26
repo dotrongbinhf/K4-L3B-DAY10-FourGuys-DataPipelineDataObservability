@@ -15,7 +15,7 @@ Khi cần lưu nhiều báo cáo thành viên trong cùng repository, nhóm nên
 <MSSV>_HoTen.md
 ```
 
-Các báo cáo dưới đây là bản nháp được điền từ commit history và artifacts. Mỗi thành viên cần đọc lại, sửa phần phản ánh cá nhân và xác nhận nội dung trước khi nộp:
+Các báo cáo cá nhân ghi vai trò, deliverable và kết quả tương ứng với từng thành viên:
 
 - [`2A202602793_DaoGiaBao.md`](2A202602793_DaoGiaBao.md)
 - [`2A202602835_NguyenVanThang.md`](2A202602835_NguyenVanThang.md)

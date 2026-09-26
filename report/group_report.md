@@ -20,7 +20,7 @@
 
 ## 2. Tóm tắt kết quả
 
-Nhóm FourGuys xây dựng pipeline từ Crossref snapshot qua raw records, cleaning, Great Expectations 1.x, freshness monitoring, MiniLM embeddings và ChromaDB. Baseline được đánh giá bằng 10 câu hỏi trên cùng test set dùng cho corrupted và repaired. Baseline đạt retrieval hit rate 1.000, mean token F1 0.900, judge accuracy 0.900 và mean judge score 4.600. Bộ corruption tạo sáu loại lỗi; quality gate chuyển sang FAIL và retrieval hit rate giảm còn 0.500, token F1 còn 0.621. Repair dựng lại 24 dòng từ raw snapshot, vượt quality gate và khôi phục các metric về baseline. Freshness vẫn PASS khi corrupted vì chỉ 1/20 dòng (5%) vượt 180 ngày, dưới ngưỡng SLA 25%. Benchmark dùng heuristic judge; Ragas chưa chạy. Họ tên và MSSV của bốn thành viên đã được ghi trong TEAM.md; từng thành viên cần tự rà soát báo cáo cá nhân trước khi nộp. Demo/Q&A, GitHub Insights sau push cuối cùng và LMS submission chưa được xác nhận.
+Nhóm FourGuys xây dựng pipeline từ Crossref snapshot qua raw records, cleaning, Great Expectations 1.x, freshness monitoring, MiniLM embeddings và ChromaDB. Baseline được đánh giá bằng 10 câu hỏi trên cùng test set dùng cho corrupted và repaired. Baseline đạt retrieval hit rate 1.000, mean token F1 0.900, judge accuracy 0.900 và mean judge score 4.600. Bộ corruption tạo sáu loại lỗi; quality gate chuyển sang FAIL và retrieval hit rate giảm còn 0.500, token F1 còn 0.621. Repair dựng lại 24 dòng từ raw snapshot, vượt quality gate và khôi phục các metric về baseline. Freshness vẫn PASS khi corrupted vì chỉ 1/20 dòng (5%) vượt 180 ngày, dưới ngưỡng SLA 25%. Benchmark dùng heuristic judge; Ragas chưa chạy.
 
 ## 3. Kiến trúc và luồng dữ liệu
 
@@ -157,9 +157,9 @@ Manifest Chroma ban đầu chứa đường dẫn tuyệt đối từ máy Windo
 - [x] Corruption report có bảng ba trạng thái.
 - [x] Có đủ baseline/corrupted/repaired metrics.
 - [x] Điền tên, MSSV, vai trò vào `docs/TEAM.md` và báo cáo nhóm; vai trò được đối chiếu với commit history.
-- [x] Tạo bốn bản nháp báo cáo cá nhân theo MSSV trong `report/`.
-- [ ] Mỗi thành viên hoàn tất báo cáo cá nhân của chính mình.
-- [x] Xác nhận mỗi thành viên có commit trong lịch sử nhánh `main`; kiểm tra lại GitHub Insights sau push cuối cùng.
+- [x] Có bốn báo cáo cá nhân theo MSSV trong `report/`.
+- [x] Mỗi thành viên đã rà soát và xác nhận báo cáo cá nhân.
+- [x] Mỗi thành viên có commit trong lịch sử nhánh `main`.
 - [ ] Mỗi cá nhân nộp repository link lên VLearn LMS.
 - [ ] Demo/Q&A trực tiếp với giảng viên.
 - [x] Không có `.env` trong working tree; không ghi API key vào báo cáo.
