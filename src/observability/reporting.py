@@ -104,6 +104,93 @@ def generate_corruption_report(
     repaired_quality: dict[str, Any],
     corrupted_freshness: dict[str, Any],
     repaired_freshness: dict[str, Any],
+    baseline_quality: dict[str, Any] | None = None,
 ) -> None:
-    """TODO(student): viet markdown report so sanh baseline/corrupted/repaired."""
-    raise NotImplementedError("Student task: implement corruption comparison report.")
+    """Write measured impact, repair, and quality evidence for all stages."""
+    table = format_corruption_comparison_table(
+        baseline_metrics, corrupted_metrics, repaired_metrics,
+        corrupted_quality, repaired_quality,
+        corrupted_freshness, repaired_freshness, baseline_quality,
+    )
+    hit_drop = corrupted_metrics["retrieval_hit_rate"] - baseline_metrics["retrieval_hit_rate"]
+    hit_recovery = repaired_metrics["retrieval_hit_rate"] - corrupted_metrics["retrieval_hit_rate"]
+    f1_drop = corrupted_metrics["mean_token_f1"] - baseline_metrics["mean_token_f1"]
+    f1_recovery = repaired_metrics["mean_token_f1"] - corrupted_metrics["mean_token_f1"]
+    lines = [
+        "# Corruption, Repair, and Impact Report",
+        "",
+        "## Comparison",
+        "",
+        table,
+        "",
+        "## Measured impact",
+        "",
+        f"- Corruption versus baseline: retrieval hit rate {hit_drop:+.3f}; mean token F1 {f1_drop:+.3f}.",
+        f"- Repair versus corruption: retrieval hit rate {hit_recovery:+.3f}; mean token F1 {f1_recovery:+.3f}.",
+        f"- Repair versus baseline: retrieval hit rate {repaired_metrics['retrieval_hit_rate'] - baseline_metrics['retrieval_hit_rate']:+.3f}; mean token F1 {repaired_metrics['mean_token_f1'] - baseline_metrics['mean_token_f1']:+.3f}.",
+        "",
+        "The corrupted rows were indexed and evaluated even though their quality gate failed. "
+        "This measures the silent failure that a gate should prevent in production.",
+        "",
+        "## Recovery method",
+        "",
+        "The repaired dataset was rebuilt from the original raw Crossref snapshot, "
+        "validated, and indexed in ChromaDB before evaluation. The benchmark "
+        "questions and ground truth were kept fixed across all three states.",
+        "",
+        "## Artifacts",
+        "",
+        "- `data/results/corruption_log.json`",
+        "- `data/results/baseline_metrics.json`",
+        "- `data/results/corrupted_metrics.json`",
+        "- `data/results/repaired_metrics.json`",
+        "- `data/quality/corrupted_quality_report.json`",
+        "- `data/quality/repaired_quality_report.json`",
+        "- `data/clean/papers_clean_corrupted.json`",
+        "- `data/clean/papers_clean_repaired.json`",
+        "",
+    ]
+    write_text(report_path, "\n".join(lines))
+
+
+def format_corruption_comparison_table(
+    baseline_metrics: dict[str, Any],
+    corrupted_metrics: dict[str, Any],
+    repaired_metrics: dict[str, Any],
+    corrupted_quality: dict[str, Any],
+    repaired_quality: dict[str, Any],
+    corrupted_freshness: dict[str, Any] | None = None,
+    repaired_freshness: dict[str, Any] | None = None,
+    baseline_quality: dict[str, Any] | None = None,
+) -> str:
+    """Use the same three-state Markdown table in the report and console."""
+    corrupted_freshness = corrupted_freshness or corrupted_quality["freshness"]
+    repaired_freshness = repaired_freshness or repaired_quality["freshness"]
+    baseline_freshness = baseline_quality.get("freshness", {}) if baseline_quality else {}
+    baseline_gate = ("PASS" if baseline_quality["success"] else "FAIL") if baseline_quality else "-"
+    baseline_rows = str(baseline_quality["row_count"]) if baseline_quality else "-"
+    baseline_sla = (
+        "PASS" if baseline_freshness["is_fresh"] else "FAIL"
+    ) if baseline_freshness else "-"
+    baseline_stale = f"{baseline_freshness['stale_ratio']:.1%}" if baseline_freshness else "-"
+    rows = [
+        "| Metric | Baseline | Corrupted | Repaired |",
+        "|---|---:|---:|---:|",
+    ]
+    for label, key in (
+        ("Samples", "samples"),
+        ("Retrieval hit rate", "retrieval_hit_rate"),
+        ("Mean token F1", "mean_token_f1"),
+        ("Judge accuracy", "judge_accuracy"),
+        ("Mean judge score", "mean_judge_score"),
+    ):
+        values = [baseline_metrics[key], corrupted_metrics[key], repaired_metrics[key]]
+        rendered = [str(int(value)) if key == "samples" else f"{value:.3f}" for value in values]
+        rows.append(f"| {label} | {' | '.join(rendered)} |")
+    rows.extend([
+        f"| Quality gate | {baseline_gate} | {'PASS' if corrupted_quality['success'] else 'FAIL'} | {'PASS' if repaired_quality['success'] else 'FAIL'} |",
+        f"| Data rows | {baseline_rows} | {corrupted_quality['row_count']} | {repaired_quality['row_count']} |",
+        f"| Freshness SLA | {baseline_sla} | {'PASS' if corrupted_freshness['is_fresh'] else 'FAIL'} | {'PASS' if repaired_freshness['is_fresh'] else 'FAIL'} |",
+        f"| Stale ratio | {baseline_stale} | {corrupted_freshness['stale_ratio']:.1%} | {repaired_freshness['stale_ratio']:.1%} |",
+    ])
+    return "\n".join(rows)
