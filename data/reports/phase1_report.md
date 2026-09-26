@@ -12,9 +12,9 @@
 |---|---:|
 | Samples | 10 |
 | Retrieval hit rate | 1.000 |
-| Mean token F1 | 0.500 |
-| Judge accuracy | 0.500 |
-| Mean judge score | 3.000 |
+| Mean token F1 | 0.900 |
+| Judge accuracy | 0.900 |
+| Mean judge score | 4.600 |
 
 ## Data Quality
 
